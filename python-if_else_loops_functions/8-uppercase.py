@@ -5,3 +5,7 @@ def uppercase(str):
             char = chr(ord(char) - 32)
         print("{}".format(char), end="")
     print("")
+
+# We declared char and going through all the symbols in string str
+# Setting condition 
+#
