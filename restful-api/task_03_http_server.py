@@ -2,7 +2,7 @@ import http.server
 import socketserver
 import json
 
-PORT = 1234
+PORT = 8000
 
 class MyHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
