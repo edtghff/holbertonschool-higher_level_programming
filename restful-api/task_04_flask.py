@@ -30,7 +30,7 @@ def get_user(username):
 def add_user():
     data = request.get_json()
 
-    if not data.get('username'):
+    if data is None or data.get('username') is None:
         return jsonify({"error": "Username is required"}), 400
 
     if not all(key in data for key in ['username', 'name', 'age', 'city']):
