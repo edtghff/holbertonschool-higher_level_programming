@@ -2,12 +2,11 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-# In-memory storage for users
 users = {}
 
 @app.route('/')
 def home():
-    return jsonify({"message": "Welcome to the Flask API!"})
+    return "Welcome to the Flask API!"
 
 @app.route('/data')
 def get_data():
@@ -15,7 +14,7 @@ def get_data():
 
 @app.route('/status')
 def status():
-    return jsonify({"status": "OK"})
+    return "OK"
 
 @app.route('/users/<username>')
 def get_user(username):
@@ -37,7 +36,7 @@ def add_user():
 
     username = data["username"]
     if username in users:
-        return jsonify({"error": "Username already exists"}), 400
+        return jsonify({"error": "Username already exists"}), 409
 
     users[username] = {
         "name": data["name"],
