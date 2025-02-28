@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 users = {
     "jane": {"name": "Jane", "age": 28, "city": "Los Angeles"}
-    }
+}
 
 @app.route('/')
 def home():
@@ -21,16 +21,22 @@ def status():
 @app.route('/users/<username>')
 def get_user(username):
     if username in users:
-        return jsonify(users[username])
+        return jsonify({
+            "username": username,
+            **users[username]
+        })
     else:
-        return 'Not found'
-    
+        return jsonify({"error": "User not found"}), 404
+
 @app.route('/add_user', methods=['POST'])
 def add_user():
     data = request.get_json()
 
+    if not data.get('username'):
+        return jsonify({"error": "Username is required"}), 400
+
     if not all(key in data for key in ['username', 'name', 'age', 'city']):
-        return jsonify({"error": "Missing requiring fields"}), 400
+        return jsonify({"error": "Missing required fields"}), 400
 
     users[data['username']] = {
         'name': data['name'],
@@ -39,9 +45,9 @@ def add_user():
     }
 
     return jsonify({
-        "message": "User added successfully",
+        "message": "User added",
         "user": users[data['username']]
     }), 201
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
