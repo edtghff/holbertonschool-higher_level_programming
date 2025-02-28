@@ -2,9 +2,7 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-users = {
-    "jane": {"name": "Jane", "age": 28, "city": "Los Angeles"}
-}
+users = {}
 
 @app.route('/')
 def home():
@@ -38,6 +36,9 @@ def add_user():
     if not all(key in data for key in ['username', 'name', 'age', 'city']):
         return jsonify({"error": "Missing required fields"}), 400
 
+    if data['username'] in users:
+        return jsonify({"error": "Username already exists"}), 400
+    
     users[data['username']] = {
         'name': data['name'],
         'age': data['age'],
