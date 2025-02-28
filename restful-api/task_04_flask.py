@@ -2,11 +2,12 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
+# In-memory storage for users
 users = {}
 
 @app.route('/')
 def home():
-    return 'Welcome to the Flask API!'
+    return jsonify({"message": "Welcome to the Flask API!"})
 
 @app.route('/data')
 def get_data():
@@ -14,40 +15,39 @@ def get_data():
 
 @app.route('/status')
 def status():
-    return 'OK'
+    return jsonify({"status": "OK"})
 
 @app.route('/users/<username>')
 def get_user(username):
-    if username in users:
-        return jsonify({
-            "username": username,
-            **users[username]
-        })
-    else:
-        return jsonify({"error": "User not found"}), 404
+    user = users.get(username)
+    if user:
+        return jsonify({"username": username, **user})
+    return jsonify({"error": "User not found"}), 404
 
 @app.route('/add_user', methods=['POST'])
 def add_user():
     data = request.get_json()
 
-    if data is None or data.get('username') is None:
+    if not data or "username" not in data:
         return jsonify({"error": "Username is required"}), 400
 
-    if not all(key in data for key in ['username', 'name', 'age', 'city']):
+    required_fields = {"username", "name", "age", "city"}
+    if not required_fields.issubset(data.keys()):
         return jsonify({"error": "Missing required fields"}), 400
 
-    if data['username'] in users:
+    username = data["username"]
+    if username in users:
         return jsonify({"error": "Username already exists"}), 400
-    
-    users[data['username']] = {
-        'name': data['name'],
-        'age': data['age'],
-        'city': data['city']
+
+    users[username] = {
+        "name": data["name"],
+        "age": data["age"],
+        "city": data["city"]
     }
 
     return jsonify({
         "message": "User added",
-        "user": users[data['username']]
+        "user": {"username": username, **users[username]}
     }), 201
 
 if __name__ == "__main__":
