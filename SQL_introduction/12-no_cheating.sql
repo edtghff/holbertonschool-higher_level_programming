@@ -1,2 +1,2 @@
 -- SQL Query
-INSERT INTO second_table WHERE name = 'Bob' (score) VALUES (10);
+UPDATE second_table SET score = 10 WHERE name = 'Bob';
