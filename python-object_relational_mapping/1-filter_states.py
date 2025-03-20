@@ -5,22 +5,20 @@ import MySQLdb
 import sys
 
 if __name__ == "__main__":
-    connection = MySQLdb.connect(
+    db = MySQLdb.connect(
         host="localhost",
         port=3306,
         user=sys.argv[1],
-        passwd=sys.argv[2],
-        db=sys.argv[3]  ,
-        charset="utf8"
+        password=sys.argv[2],
+        db=sys.argv[3]
     )
-
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM states WHERE name LIKE 'N%' ORDER BY id ASC")
-
-    rows = cursor.fetchall()
+    cur = db.cursor()
+    cur.execute("SELECT * FROM states name ORDER BY id ASC")
+    rows = cur.fetchall()
 
     for row in rows:
-        print(row)
+        if row[1][0] == "N":
+            print(row)
 
-    cursor.close()
-    connection.close()
+    cur.close()
+    db.close()
