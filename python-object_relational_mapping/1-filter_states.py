@@ -15,13 +15,12 @@ if __name__ == "__main__":
     )
 
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM states name ORDER BY id ASC")
+    cursor.execute("SELECT * FROM states WHERE name LIKE 'N%' ORDER BY id ASC")
 
     rows = cursor.fetchall()
 
     for row in rows:
-        if row[1][0] == 'N':
-            print(row)
+        print(row)
 
     cursor.close()
     connection.close()
