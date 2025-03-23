@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Module that lists all cities from the database hbtn_0e_4_usa"""
+"""Module that takes in the name of a state as an argument and lists all cities of that state, using the database hbtn_0e_4_usa"""
 
 if __name__ == "__main__":
     import MySQLdb
@@ -8,6 +8,7 @@ if __name__ == "__main__":
     mysql_username = sys.argv[1]
     mysql_password = sys.argv[2]
     database_name = sys.argv[3]
+    state_name = sys.argv[4]
 
     db = MySQLdb.connect(
         host="localhost",
@@ -18,15 +19,14 @@ if __name__ == "__main__":
         charset="utf8"
     )
 
-    query = "SELECT cities.id, cities.name, states.name FROM cities JOIN states ON cities.state_id = states.id ORDER BY cities.id ASC"
+    query = "SELECT cities.name FROM cities JOIN states ON cities.state_id = states.id WHERE states.name = '{}' ORDER BY cities.id ASC".format(state_name)
 
     cursor = db.cursor()
     cursor.execute(query)
 
     rows = cursor.fetchall()
-    
-    for row in rows:
-        print(row)
-    
+
+    print(", ".join([row[0] for row in rows]))
+
     cursor.close()
     db.close()
