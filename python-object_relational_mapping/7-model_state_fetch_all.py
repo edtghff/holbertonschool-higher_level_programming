@@ -15,8 +15,14 @@ if __name__ == "__main__":
         f"mysql+mysqldb://{mysql_username}:{mysql_password}@localhost/{database_name}",
         pool_pre_ping=True,
     )
-    
+
     
     Session = sessionmaker(bind=engine)
     session = Session()
 
+    states = session.query(State).order_by(State.id).all()
+    for state in states:
+        print(f"{state.id}: {state.name}")
+
+    session.close()
+    Base.metadata.create_all(engine)
